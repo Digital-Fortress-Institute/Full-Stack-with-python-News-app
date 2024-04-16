@@ -3,8 +3,8 @@ from flask import redirect, render_template, request, url_for
 
 @apk.route("/home")
 def all():
-    post = db.session.execute(db.select(Blog).order_by(Blog.title)).scalars()
-    return render_template("index.html", post=post)
+    posts = db.session.execute(db.select(Blog).order_by(Blog.title)).scalars()
+    return render_template("index.html", posts=posts)
 
 @apk.route("/upload", methods=['GET', 'POST'])
 def upload():
@@ -18,3 +18,8 @@ def upload():
         db.session.commit()
         return redirect(url_for("all"))
     return render_template('upload.html')
+
+@apk.route("/blog/<int:id>")
+def user_detail(id):
+    post = Blog.query.get_or_404(id)
+    return render_template("detail.html", post=post)
